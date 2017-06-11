@@ -29,3 +29,7 @@
 [0611/094838.592:ERROR:crash_report_database_win.cc(563)] CreateDirectory C:\Program Files (x86)\Google\Chrome: The system cannot find the path specified. (0x3)
 [0611/094838.596:ERROR:registration_protocol_win.cc(83)] TransactNamedPipe: The pipe has been ended. (0x6D)
 [0611/094839.076:ERROR:crashpad_win.cc(223)] Crashpad handler failed to start, crash reporting disabled
+[0611/190454.672:ERROR:crash_report_database_win.cc(563)] CreateDirectory C:\Program Files (x86)\Google\Chrome: The system cannot find the path specified. (0x3)
+[0611/190454.991:ERROR:crash_report_database_win.cc(563)] CreateDirectory C:\Program Files (x86)\Google\Chrome: The system cannot find the path specified. (0x3)
+[0611/190454.996:ERROR:registration_protocol_win.cc(83)] TransactNamedPipe: The pipe has been ended. (0x6D)
+[0611/190455.655:ERROR:crashpad_win.cc(223)] Crashpad handler failed to start, crash reporting disabled
