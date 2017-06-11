@@ -2,47 +2,58 @@ import ReportActions from '../../store/actions/reportActions';
 import * as firebase from 'firebase';
 
 
-export default class ReportMiddleware{
-    static fileReport(reportFile){
-        return (dispatch)=>{
+export default class ReportMiddleware {
+    static fileReport(reportFile) {
+        return (dispatch) => {
             dispatch(ReportActions.fileReport());
-            ReportMiddleware.addReportToFirebase(dispatch,reportFile);
+            ReportMiddleware.addReportToFirebase(dispatch, reportFile);
         }
     }
-    static addReportToFirebase(dispatch,reportFile){
+    static addReportToFirebase(dispatch, reportFile) {
+        var pushkey = firebase.database().ref('/')
+            .child(`reports/${reportFile.city}`)
+            .push().key;
+        console.log(pushkey);
+
         firebase.database().ref('/')
-        .child(`reports/${reportFile.city}`)
-        .set(reportFile)
-        .then(()=>{
-            console.log("report updated");
-        })
-        .catch((error)=>{
-            dispatch(ReportActions.fileReportRejected(error));
-        });
-        dispatch(ReportActions.fileReportSuccessful());
+            .child(`reports/${reportFile.city}/${pushkey}`)
+            .set(reportFile)
+            .then(() => {
+                firebase.database().ref('/')
+                    .child(`userReports/${reportFile.userId}/${pushkey}`)
+                    .set(reportFile)
+                    .then(() => {
+                        dispatch(ReportActions.fileReportSuccessful());
+                    })
+                console.log("report updated");
+            })
+            .catch((error) => {
+                dispatch(ReportActions.fileReportRejected(error));
+            });
     }
-    static getListOfCities(){
-        return (dispatch)=>{
+
+    static getListOfCities() {
+        return (dispatch) => {
             dispatch(ReportActions.getListOfCities());
             ReportMiddleware.getListOfCitiesFromFirebase(dispatch);
         };
     }
-    static getListOfCitiesFromFirebase(dispatch){
-            firebase.database().ref('/')
-                .child(`cities`)
-                .on('value', function(snapshot){
-                    console.log("snapshot", snapshot.val());
-                    var data = Object.keys(snapshot.val());
-                    // console.log("key",Object.keys(snapshot.val()));
-                
+    static getListOfCitiesFromFirebase(dispatch) {
+        firebase.database().ref('/')
+            .child(`cities`)
+            .on('value', function (snapshot) {
+                console.log("snapshot", snapshot.val());
+                var data = Object.keys(snapshot.val());
+                // console.log("key",Object.keys(snapshot.val()));
+
                 // var Array = []
                 // for(var props in data){
                 //     console.log("props", props)
                 //     Array.push(data[props])
                 // }
                 // console.log(Array)
-                    dispatch(ReportActions.getListOFCitiesSuccessful(data));
-                });
-                
-        }
+                dispatch(ReportActions.getListOFCitiesSuccessful(data));
+            });
+
+    }
 }

@@ -8,7 +8,7 @@ import "../.././App.css"
 const mapStateToProps = (state) => {
     console.log(state);
     return {
-        // authUser: state.AuthReducer.authUser,
+        authUser: state.AuthReducer.authUser,
         cityList: state.ReportReducer.cityList,
         isReportSubmitted: state.ReportReducer.isReportSubmitted
     }
@@ -41,9 +41,9 @@ class FileReport extends Component {
          this.handleChangeInput = this.handleChangeInput.bind(this);
     }
     componentWillReceiveProps(nextProps){
-        if(this.props.isReportSubmitted){
+        if(nextProps.isReportSubmitted){
             alert("Report Submitted");
-        }
+        }   
     }
 
     handleReportChange(event, index, value) {
@@ -62,22 +62,22 @@ class FileReport extends Component {
     }
     handleSave() {
         let userReportInfo = {
+            userId : this.props.authUser.uid,            
             reportType: this.state.reportType,
-            city: this.state.city,
-            // userId : this.props.authUser.uid
+            city: this.state.city
         };
-        if(this.state.reportType==="Complaint" || this.state.reportType === "Crime"){
-            userReportInfo.title = this.state.title,
+        if(this.state.reportType === "Complaint" || this.state.reportType === "Crime"){
+            userReportInfo.title = this.state.title
             userReportInfo.description = this.state.description
         }
         if(this.state.reportType==="Crime"){
             userReportInfo.picture = this.state.picture
         }
         if(this.state.reportType==="Missing Person"){
-            userReportInfo.fullName = this.state.fullName,
-            userReportInfo.address = this.state.address,
-            userReportInfo.age = this.state.age,
-            userReportInfo.identification = this.state.identification,
+            userReportInfo.fullName = this.state.fullName
+            userReportInfo.address = this.state.address
+            userReportInfo.age = this.state.age
+            userReportInfo.identification = this.state.identification
             userReportInfo.dateSinceMissing = this.state.dateSinceMissing.getTime();
         }
         this.props.reportFile(userReportInfo);

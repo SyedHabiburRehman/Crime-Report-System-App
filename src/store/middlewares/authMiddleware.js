@@ -3,9 +3,6 @@ import firebase from 'firebase';
 
 export default class FirebaseAuthService{
 
-static hello(){
-    console.log("dasdasdasd")
-}
     static registerUserOnFirebase(credentials) {
         return (dispatch) => {
             
@@ -26,7 +23,7 @@ static hello(){
 
     static createUserOnFirebaseWithUid(dispatch, credentials, userResponseFromFirebase) {
         console.log('credentials', credentials)
-
+        credentials.uid= userResponseFromFirebase.uid;
         delete credentials.pass
         firebase.database().ref('/')
             .child(`newUsers/${userResponseFromFirebase.uid}`)
@@ -60,6 +57,7 @@ static hello(){
         firebase.database().ref('/')
             .child(`newUsers/${authUser.uid}`)
             .once('value', (snap) => {
+                console.log("snap.val" , snap.val());
                 dispatch(AuthAction.loginSuccessFull(snap.val()))
             })
     }
