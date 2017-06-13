@@ -4,7 +4,10 @@ import ReportActions from '../../store/actions/reportActions';
         errorMessage: {},
         isProcessing: false,
         isReportSubmitted: false,
-        cityList:[]
+        cityList:[],
+        reportCounts:{},
+        reportList: []
+
     }
 
    export const ReportReducer = (state = INITIAL_STATE, action)=> {
@@ -16,6 +19,13 @@ import ReportActions from '../../store/actions/reportActions';
                 return Object.assign({},state,{isProcessing:false, isError: false, errorMessage: {}, isReportSubmitted:true})
             case ReportActions.FILE_REPORT_REJECTED:
                 return Object.assign({},state,{isProcessing:false, isError:true, errorMessage:action.payload, isReportSubmitted:false})
+
+            case ReportActions.GET_REPORT_LIST:
+                return Object.assign({},state, {isProcessing: true, isError: false, reportList:[]})
+            case ReportActions.GET_REPORT_LIST_SUCCESSFUL:
+                return Object.assign({}, state, {isProcessing: false, isError:false, reportList: action.payload})
+            case ReportActions.GET_REPORT_LIST_REJECTED:
+                return Object.assign({},state, {isProcessing:false, isError: true, errorMessage:action.payload, reportList:[]})
 
             case ReportActions.GET_LIST_OF_CITIES:
                 return Object.assign({}, state, {isProcessing:true, isError:false, cityList:[]})

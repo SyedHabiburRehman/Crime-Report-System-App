@@ -10,14 +10,16 @@ const mapStateToProps = (state) => {
     return {
         authUser: state.AuthReducer.authUser,
         cityList: state.ReportReducer.cityList,
-        isReportSubmitted: state.ReportReducer.isReportSubmitted
+        isReportSubmitted: state.ReportReducer.isReportSubmitted,
+        reportCounts : state.ReportReducer.reportCounts,
+
     }
 }
 
 const mapDispatchToProps = (dispatch)=>{
     return{
-        reportFile: (reportFile)=>{
-            dispatch(ReportMiddleware.fileReport(reportFile))
+        reportFile: (reportFile,reportCounts)=>{
+            dispatch(ReportMiddleware.fileReport(reportFile,reportCounts))
         }
     }
 }
@@ -80,7 +82,7 @@ class FileReport extends Component {
             userReportInfo.identification = this.state.identification
             userReportInfo.dateSinceMissing = this.state.dateSinceMissing.getTime();
         }
-        this.props.reportFile(userReportInfo);
+        this.props.reportFile(userReportInfo,this.props.reportCounts);
     }
 
     renderMissingPersonsFields(){

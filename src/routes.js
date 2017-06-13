@@ -4,6 +4,7 @@ import SignUp from './containers/signUp/signup';
 import Login from './containers/login/login';
 import FileReport from './containers/fileReport/fileReport';
 import App from './containers/App/app';
+import Dashboard from './containers/Dashboard/dashboard';
 
 export default class Routes extends Component{
     render(){
@@ -15,6 +16,7 @@ export default class Routes extends Component{
                     <Route path="/signup" component={SignUp}/>
                     <Route path="/login" component={Login}/>
                     <Route path="/fileReport" component={FileReport}/>
+                    <Route path="/dashboard" component={Dashboard}/>
                 </Route>
                 
             </Router>
