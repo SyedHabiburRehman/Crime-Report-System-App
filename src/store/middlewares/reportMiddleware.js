@@ -91,15 +91,60 @@ export default class ReportMiddleware {
     static getReportListFromFirebase(dispatch, cityName){
         firebase.database().ref('/')
             .child(`reports/${cityName}`)
-            .on("child_added",function(snapshot){
-                var report = snapshot.val();
-                report.key = snapshot.key;
-
+            .on("child_added",function(snapshot){        // "child_added" is used because it goes to given node's all children
+                var report = snapshot.val();  
+                console.log(report);           // direct but one by one; means it fetch first children then    
+                report.key = snapshot.key;               // we save it in array then it again goes next children until 
+                                                        //  reached to the last children of given node 
                 console.log("report", report);
                 dispatch(ReportActions.getReportListSuccessful(report));
             })
     }
 // Get Report List Ends
+
+// Get My Reports Starts
+    static getMyReports(uid){
+        console.log(uid)
+        return(dispatch)=>{
+            dispatch(ReportActions.getMyReports());
+            ReportMiddleware.getMyReportsFromFirebase(dispatch,uid)
+        }
+    }
+    static getMyReportsFromFirebase(dispatch,uid){
+        firebase.database().ref('/').child(`userReports/${uid}`)
+            .on("child_added",(snapshot)=>{
+                console.log(snapshot.val());
+                var data = snapshot.val();
+                data.key=snapshot.key;
+                dispatch(ReportActions.getMyReportsSuccessful(data));
+                // var Array = []
+                // for(var props in snapshot.val()){
+                //     Array.push(snapshot.val()[props])
+                // }
+                // console.log(Array);
+            })
+    }
+// Get My Reports Ends
+
+// Get Report Detail Starts
+static getReportDetail(city,id){
+    console.log("city" , city + "id", id);
+    return(dispatch)=>{
+        dispatch(ReportActions.getReportDetail())
+        ReportMiddleware.getReportDetailFromFirebase(dispatch,city,id);
+    }
+}
+static getReportDetailFromFirebase(dispatch,city,id){
+    {
+        firebase.database().ref('/').child(`reports/${city}/${id}`)
+            .on("value",(snapshot)=>{
+                var data = snapshot.val();
+                console.log("data", data)
+                dispatch(ReportActions.getReportDetailSuccessful(data));
+            })
+    }
+}
+// Get Report Detail Ends
 
 // get List Of Cities Starts
     static getListOfCities() {

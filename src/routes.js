@@ -5,6 +5,8 @@ import Login from './containers/login/login';
 import FileReport from './containers/fileReport/fileReport';
 import App from './containers/App/app';
 import Dashboard from './containers/Dashboard/dashboard';
+import ReportDetail from './containers/reportDetail/reportDetail';
+import MyReports from './containers/myReports/myReports';
 
 export default class Routes extends Component{
     render(){
@@ -17,6 +19,8 @@ export default class Routes extends Component{
                     <Route path="/login" component={Login}/>
                     <Route path="/fileReport" component={FileReport}/>
                     <Route path="/dashboard" component={Dashboard}/>
+                    <Route path="/reportItem/:id" component={ReportDetail}/>
+                    <Route path="/myReports" component={Dashboard}/>
                 </Route>
                 
             </Router>

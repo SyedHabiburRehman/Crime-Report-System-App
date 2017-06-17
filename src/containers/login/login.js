@@ -39,7 +39,7 @@ componentWillReceiveProps(nextProps){
     console.log("'next prop' from login compo" ,  nextProps);
   if(nextProps.isLoggedin){
       alert("Log In");
-    browserHistory.push('/fileReport');
+    browserHistory.push('/dashboard');
   }
 }
 
