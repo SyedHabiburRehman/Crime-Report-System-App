@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
+// import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import ReportMiddleware from '../../store/middlewares/reportMiddleware';
 import CrimeReport from '../../crimeReport/crimeReport';
 import * as MUI from 'material-ui';
 
 const mapStateToProps = (state) => {
+    console.log("state.ReportReducer.reportCount", state.ReportReducer.reportCount);
     return {
         uid: state.AuthReducer.authUser.uid,
         reportList: state.ReportReducer.reportList,
         cityList: state.ReportReducer.cityList,
-        myReportList: state.ReportReducer.myReportList
+        myReportList: state.ReportReducer.myReportList,
+        reportCount: state.ReportReducer.reportCount
     }
 }
 
@@ -19,7 +21,7 @@ const mapDispatchToProps = (dispatch) => {
         getReportList: (cityName) => {
             dispatch(ReportMiddleware.getReportList(cityName));
         },
-        getMyReports: (uid)=> {dispatch(ReportMiddleware.getMyReports(uid))}
+        //     getMyReports: (uid)=> {dispatch(ReportMiddleware.getMyReports(uid))}
     }
 }
 
@@ -61,23 +63,24 @@ class Dashboard extends Component {
     }
 
     //when my reports button click first it will get data from firebase then change the router path
-    showMyReports(){
-        this.props.getMyReports(this.props.uid);
-        browserHistory.push("/myReports");
-    }
-    goDashboard(){
-        browserHistory.push('/fileReport')
-    }
+    // showMyReports() {
+    //     this.props.getMyReports(this.props.uid);
+    //     browserHistory.push("/myReports");
+    // }
+    // goDashboard() {
+    //     browserHistory.push('/fileReport')
+    // }
+
     render() {
         return (
             <div>
-                <MUI.RaisedButton label ="file Report" onTouchTap={this.goDashboard.bind(this)}/>
-                <MUI.RaisedButton label="My Report" onTouchTap={this.showMyReports.bind(this)}/>
+                {/*<MUI.RaisedButton label="file Report" onTouchTap={this.goDashboard.bind(this)} />
+                <MUI.RaisedButton label="My Report" onTouchTap={this.showMyReports.bind(this)} />*/}
 
-                {this.props.location.pathname!=="/myReports"?this.renderFilterCity():null}
+                {this.props.location.pathname !== "/myReports" ? this.renderFilterCity() : null}
 
-                <CrimeReport {...this.props} />
-                {console.log(this.props)}
+                <CrimeReport {...this.props} city={this.state.city} />
+                {console.log(this.props.reportCount.Complaint)}
 
             </div>
         )

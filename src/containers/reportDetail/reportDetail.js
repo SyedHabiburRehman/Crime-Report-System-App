@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 const mapStateToProps=(state)=>{
     console.log("state.reportDetail" , state.ReportReducer.reportDetail)
     return{
+        isLoggedin: state.AuthReducer.isLoggedin,
+        authUser: state.AuthReducer.authUser,
         reportDetail: state.ReportReducer.reportDetail
     }
 }
@@ -17,6 +19,9 @@ const mapDispatchToProps=(dispatch)=>{
         getReportDetail: (city,id)=>{
             console.log(city,id);
             dispatch(ReportMiddelware.getReportDetail(city,id));
+        },
+        statusUpdate: (status,reportDetail)=>{
+            dispatch(ReportMiddelware.statusUpdate(status,reportDetail));
         }
     }
 }
@@ -44,7 +49,70 @@ class ReportDetail extends Component{
             );
         }
     }
+    handleStatusUpdate(){
+        var status = this.refs.status.getValue();
+        console.log("status", status);
+        this.props.statusUpdate(status,this.props.reportDetail);
+    }
+    renderAdminStatusFields(){
+        console.log("working")
+        return(
+            <div>
+                <MUI.TextField 
+                    floatingLabelText="Status"
+                    name="status"
+                    ref="status"
+                    required={true}
+                    />
+                    <MUI.RaisedButton
+                        label="Update Status"
+                        primary={true}
+                        onTouchTap={this.handleStatusUpdate.bind(this)}
+                    />
 
+            </div>
+        )
+    }
+    renderStatus(reportDetail){
+    //    console.log(reportDetail.statusList)
+    //     var statusArray = [];
+    //     if(reportDetail.statusList){
+    //      statusArray = Object.keys(reportDetail.statusList);
+    //     }
+    //     console.log("Status Array ",statusArray)
+        
+    //     statusArray.map(key=>{console.log(key);
+    //         console.log(reportDetail.statusList[key].statusMessage)
+    //           return(
+    //         <MUI.Card key={key}>
+    //             <MUI.CardText >
+    //                {reportDetail.statusList[key].statusMessage}
+    //              </MUI.CardText>
+    //            </MUI.Card>
+    //     )})
+        var statusListKeys=[]
+    if(reportDetail.statusList){
+      statusListKeys = Object.keys(reportDetail.statusList);
+    }
+    console.log("Status Array ",statusListKeys)
+    return (
+      <div>
+        <div style={{margin:20}}>
+          Status Updates From Admin
+        </div>
+        {
+            statusListKeys.map(key=>{
+              return (
+              <MUI.Card key={key}>
+                <MUI.CardText >
+                  {reportDetail.statusList[key].statusMessage}
+                </MUI.CardText>
+              </MUI.Card>);
+            })
+        }
+      </div>
+    );
+    }
     componentWillMount(){
     console.log("-----------------")
         this.props.getReportDetail(this.props.location.state.city,this.props.params.id);
@@ -52,7 +120,7 @@ class ReportDetail extends Component{
     render(){
         return(
             <div>
-                {console.log(this.props.reportDetail.reportType)}
+                {console.log(this.props.reportDetail.key)}
                 <MUI.Card>
                     <MUI.CardHeader title={this.props.reportDetail.reportType==="Missing Person"?this.props.reportDetail.fullName:this.props.reportDetail.title}
                                     subtitle={this.props.reportDetail.city}  
@@ -61,10 +129,8 @@ class ReportDetail extends Component{
                         {this.renderSpecificDetails(this.props.reportDetail.reportType)}
                     </MUI.CardText>
                 </MUI.Card>
-                {/*<p>{this.props.reportDetail.title}</p>
-                <p></p>
-                <p></p>
-                <p></p>*/}
+                {this.renderStatus(this.props.reportDetail)}
+                {(this.props.authUser.isAdmin && this.props.isLoggedin)?this.renderAdminStatusFields():null}
             </div>
         )
     }

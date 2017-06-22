@@ -12,6 +12,7 @@ class CrimeReport extends Component {
     constructor() {
         super();
         this.handleshowDetail = this.handleshowDetail.bind(this);
+        this.state={counts:this.props.reportCount}
     }
 
     handleshowDetail = (city, key) => {
@@ -47,26 +48,54 @@ class CrimeReport extends Component {
         )
 
     }
+    // renderCount(city) {
+    //     // const {counts} = this.props;
+    //     // console.log(counts);
+    //     // console.log(this.props.reportCount.Crime)
+    //     var countArray = [this.props.reportCount[city]]
+    //     console.log(countArray)
+    //     return(
+    //         <div>
+    //             {
+    //                 //countArray.map(type=>{console.log(type)
+    //                 countArray.map((t,i)=>{console.log(t)
+    //                      return(
+    //                         <div key={i}>
+    //                             <p>{t}</p>
+    //                             {/*<p>{type.Complaint}</p>
+    //                             <p>{type.MissingPerson}</p>*/}
+    //                         </div>
+    //                     )
+                    
+                       
+    //                 })
+    //             }
+    //             <p>{this.props.reportCount.Crime}</p>
+    //         </div>
+    //     )
+    // }
 
     render() {
 
+        console.log(this.props)
+        console.log(this.props.city)
         console.log(this.props.location.pathname)
         const reportList = this.props.location.pathname === "/dashboard" ? this.props.reportList : this.props.myReportList;
         console.log(reportList)
         return (
             <div>
-
+                {this.renderCount(this.props.city)}
                 <MUI.Tabs>
                     <MUI.Tab icon={<Fingerprint />} label="Crime">
                         {
                             (() => {
-                                {/*function filterfunction(value) {
+                                /*function filterfunction(value) {
                                     return (value.reportType === "Crime");
-                                }*/}
+                                }*/
                                 var filterList = reportList.filter(report => {
                                     return report.reportType === "Crime";
                                 });
-                                {/*console.log(report.reportType)}*/ }
+                                /*console.log(report.reportType)}*/
                                 console.log(filterList)
                                 return filterList.length > 0 ? this.renderList(filterList, <Fingerprint />) : <div>No report</div>
                             })()
@@ -75,13 +104,13 @@ class CrimeReport extends Component {
                     <MUI.Tab icon={<Face />} label="Missing Person">
                         {
                             (() => {
-                                {/*function filterfunction(value) {
+                                /*function filterfunction(value) {
                                     return (value.reportType === "Complaint");
-                                }*/}
+                                }*/
                                 var filterList = reportList.filter(report => {
                                     return report.reportType === "Missing Person";
                                 });
-                                {/*console.log(report.reportType)}*/ }
+                                /*console.log(report.reportType)}*/
                                 console.log(filterList)
                                 return filterList.length > 0 ? this.renderList(filterList, <Face />) : <div>No report</div>
                             })()
@@ -90,13 +119,13 @@ class CrimeReport extends Component {
                     <MUI.Tab icon={<RecordVoiceOver />} label="Complaints">
                         {
                             (() => {
-                                {/*function filterfunction(value) {
+                                /*function filterfunction(value) {
                                     return (value.reportType === "Complaint");
-                                }*/}
+                                }*/
                                 var filterList = reportList.filter(report => {
                                     return report.reportType === "Complaint";
                                 });
-                                {/*console.log(report.reportType)}*/ }
+                                /*console.log(report.reportType)}*/
                                 console.log(filterList)
                                 return filterList.length > 0 ? this.renderList(filterList, <RecordVoiceOver />) : <div>No report</div>
                             })()

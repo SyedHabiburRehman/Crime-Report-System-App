@@ -11,6 +11,10 @@ export default class ReportActions{
     static GET_REPORT_DETAIL_SUCCESSFUL = "GET_REPORT_DETAIL_SUCCESSFUL";
     static GET_REPORT_DETAIL_REJECTED = "GET_REPORT_DETAIL_REJECTED";
 
+    static STATUS_UPDATE = "STATUS_UPDATE";
+    static STATUS_UPDATE_SUCCESSFUL = "STATUS_UPDATE_SUCCESSFUL";
+    static STATUS_UPDATE_REJECTED = "STATUS_UPDATE_REJECTED";
+
     static GET_MY_REPORTS = "GET_MY_REPORTS";
     static GET_MY_REPORTS_SUCCESSFUL = "GET_MY_REPORTS_SUCCESSFUL";
     static GET_MY_REPORTS_REJECTED = "GET_MY_REPORTS_REJECTED";
@@ -20,14 +24,19 @@ export default class ReportActions{
     static GET_LIST_OF_CITIES_SUCCESSFUL = "GET_LIST_OF_CITIES_SUCCESSFUL";
     static GET_LIST_OF_CITIES_REJECTED = "GET_LIST_OF_CITIES_REJECTED";
 
+    static GET_REPORT_COUNT = "GET_REPORT_COUNT";
+    static GET_REPORT_COUNT_SUCCESSFUL = "GET_REPORT_COUNT_SUCCESSFUL";
+    static GET_REPORT_COUNT_REJECTED = "GET_REPORT_COUNT_REJECTED";
+
     static fileReport(){
         return{
             type:ReportActions.FILE_REPORT,
         }
     }
-    static fileReportSuccessful(){
+    static fileReportSuccessful(report){
         return{
             type: ReportActions.FILE_REPORT_SUCCESSFUL,
+            payload: report
         }
     }
     static fileReportRejected(errorMessage){
@@ -73,6 +82,7 @@ export default class ReportActions{
         }
     }
 
+
     static getMyReports(){
         return{
             type: ReportActions.GET_MY_REPORTS
@@ -90,6 +100,24 @@ export default class ReportActions{
             payload: errorMessage
         }
     }
+
+    static statusUpdate(){
+        return{
+            type: ReportActions.STATUS_UPDATE
+        }
+    }
+    static statusUpdateSuccessful(){
+        return{
+            type: ReportActions.STATUS_UPDATE_SUCCESSFUL,
+        }
+    }
+    static statusUpdateRejected(errorMessage){
+        return{
+            type: ReportActions.STATUS_UPDATE_REJECTED,
+            payload: errorMessage
+        }
+    }
+
     static getListOfCities(){
         return{
             type: ReportActions.GET_LIST_OF_CITIES,
@@ -108,5 +136,23 @@ export default class ReportActions{
             payload: errorMessage
         }
         
+    }
+
+    static getReportCount(){
+        return{
+            type : ReportActions.GET_REPORT_COUNT
+        }
+    }    
+    static getReportCountSuccessful(counts){
+        return{
+            type : ReportActions.GET_REPORT_COUNT_SUCCESSFUL,
+            payload: counts
+        }
+    }    
+    static getReportCountRejected(errorMessage){
+        return{
+            type : ReportActions.GET_REPORT_COUNT_REJECTED,
+            payload: errorMessage
+        }
     }    
 }

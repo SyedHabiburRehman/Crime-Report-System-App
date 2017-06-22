@@ -221,8 +221,8 @@ class FileReport extends Component {
                     
                     {this.renderReportTypeSpecifiedFields(this.state.reportType)}
 
-                    <Link to="/"><MUI.RaisedButton label="Cancel" /></Link>
                     <MUI.RaisedButton label="Save" onTouchTap={this.handleSave} primary={true} />
+                    <Link to="/"><MUI.RaisedButton label="Cancel" /></Link>
 
                 </MUI.Paper>
             </div>

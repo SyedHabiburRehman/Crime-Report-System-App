@@ -1,7 +1,6 @@
 import ReportActions from '../../store/actions/reportActions';
 import * as firebase from 'firebase';
 
-
 export default class ReportMiddleware {
     // Reporting File starts
     static fileReport(reportFile) {
@@ -10,7 +9,7 @@ export default class ReportMiddleware {
             ReportMiddleware.addReportToFirebase(dispatch, reportFile);
         }
     }
-    static addReportToFirebase(dispatch, reportFile,reportCounts) {
+    static addReportToFirebase(dispatch, reportFile, reportCounts) {
         var pushkey = firebase.database().ref('/')
             .child(`reports/${reportFile.city}`)
             .push().key;
@@ -24,8 +23,10 @@ export default class ReportMiddleware {
                     .child(`userReports/${reportFile.userId}/${pushkey}`)
                     .set(reportFile)
                     .then(() => {
-                        dispatch(ReportActions.fileReportSuccessful());
-                        ReportMiddleware.updatingReportCounts(dispatch,reportFile,reportCounts);
+                        // console.log("/////////////", report)
+                        dispatch(ReportActions.fileReportSuccessful(reportFile));
+                        ReportMiddleware.updateCounts(dispatch, reportFile);
+                        // ReportMiddleware.updatingReportCounts(dispatch, reportFile, reportCounts);
                     })
                 console.log("report updated");
             })
@@ -35,38 +36,74 @@ export default class ReportMiddleware {
     }
     //Reporting File Ends
 
+    // static updateCounts(dispatch, reportFile) {
+    //    var count = {
+    //         Crime:0,
+    //         Complaint:0,
+    //         MissingPerson:0
+    //     }
+    //     if(reportFile.reportType==="Crime"){
+    //        count.Crime = count.Crime + 1;
+    //     }
+    //     if(reportFile.reportType==="Complaint"){
+    //         count.Complaint = count.Complaint + 1;
+    //     }
+    //     if(reportFile.reportType==="Missing Person"){
+    //         count.MissingPerson = count.MissingPerson + 1;
+    //     }
+    //     firebase.database().ref('/').child(`reportCounts/${reportFile.city}`)
+    //         .set(count)
+    //         .then(()=>{console.log("count updated")})
+    // }
+
+    // static getReportCount(){
+    //     return (dispatch) =>{
+    //         dispatch(ReportActions.getReportCount());
+    //         ReportMiddleware.getReportCountFromFirebase(dispatch);
+    //     }
+    // }
+    // static getReportCountFromFirebase(dispatch){
+    //     firebase.database().ref('/').child(`reportCounts`)
+    //     .on("value" , (snapshot)=>{
+    //         var counts = snapshot.val();
+    //         console.log("Report Count", counts);
+    //         dispatch(ReportActions.getReportCountSuccessful(counts));
+    //     });
+    // }
+
+
     // Update Count Starts
-    static updatingReportCounts(dispatch,reportFile,reportCounts){
-        console.log("report counts" , reportCounts)
+    static updatingReportCounts(dispatch, reportFile, reportCounts) {
+        console.log("report counts", reportCounts)
         var cityCount = {
-            complaints:0,
-            crimes:0,
-            missingPersons:0
+            complaints: 0,
+            crimes: 0,
+            missingPersons: 0
         };
         var totalCount = {
-            complaints:0,
-            crimes:0,
-            missingPersons:0
+            complaints: 0,
+            crimes: 0,
+            missingPersons: 0
         };
-        if(reportCounts && reportCounts[reportFile.city]){
+        if (reportCounts && reportCounts[reportFile.city]) {
             console.log("====================");
-            cityCount = {...reportCounts[reportFile.city]}
+            cityCount = { ...reportCounts[reportFile.city] }
         }
-        if(reportCounts && reportCounts.totalCount){
+        if (reportCounts && reportCounts.totalCount) {
             console.log("--------------------");
-        console.log("report conunts" , reportCounts.totalCounts)
-            totalCount = {...reportCounts.totalCounts}
+            console.log("report conunts", reportCounts.totalCounts)
+            totalCount = { ...reportCounts.totalCounts }
         }
-        
-        if(reportFile.reportType==="Complaint"){
+
+        if (reportFile.reportType === "Complaint") {
             totalCount["complaints"] = ++totalCount["complaints"]
             cityCount["complaints"] = ++cityCount["complaints"]
         }
-        if(reportFile.reportType==="Crime"){
+        if (reportFile.reportType === "Crime") {
             totalCount["crimes"] = ++totalCount["crimes"]
             cityCount["crimes"] = ++cityCount["crimes"]
         }
-        if(reportFile.reportType==="Missing Person"){
+        if (reportFile.reportType === "Missing Person") {
             totalCount["missingPersons"] = ++totalCount["missingPersons"]
             cityCount["missingPersons"] = ++cityCount["missingPersons"]
         }
@@ -79,43 +116,42 @@ export default class ReportMiddleware {
         reportTotalCountRef.set(totalCount);
         reportCityCountRef.set(cityCount);
     }
-// Updating Count Ends
+    // Updating Count Ends
 
-// Get Report List Starts
-    static getReportList(cityName){
-        return(dispatch)=>{
+    // Get Report List Starts
+    static getReportList(cityName) {
+        return (dispatch) => {
             dispatch(ReportActions.getReportList());
             ReportMiddleware.getReportListFromFirebase(dispatch, cityName);
         }
     }
-    static getReportListFromFirebase(dispatch, cityName){
+    static getReportListFromFirebase(dispatch, cityName) {
         firebase.database().ref('/')
             .child(`reports/${cityName}`)
-            .on("child_added",function(snapshot){        // "child_added" is used because it goes to given node's all children
-                var report = snapshot.val();  
-                console.log(report);           // direct but one by one; means it fetch first children then    
-                report.key = snapshot.key;               // we save it in array then it again goes next children until 
-                                                        //  reached to the last children of given node 
+            .on("child_added", function (snapshot) {        // "child_added" is used because it goes to given node's all children
+                var report = snapshot.val();                // direct but one by one; means it fetch first children then
+                console.log(report);                        // we save it in array then it again goes next children until 
+                report.key = snapshot.key;                  //  reached to the last children of given node 
                 console.log("report", report);
                 dispatch(ReportActions.getReportListSuccessful(report));
             })
     }
-// Get Report List Ends
+    // Get Report List Ends
 
-// Get My Reports Starts
-    static getMyReports(uid){
+    // Get My Reports Starts
+    static getMyReports(uid) {
         console.log(uid)
-        return(dispatch)=>{
+        return (dispatch) => {
             dispatch(ReportActions.getMyReports());
-            ReportMiddleware.getMyReportsFromFirebase(dispatch,uid)
+            ReportMiddleware.getMyReportsFromFirebase(dispatch, uid)
         }
     }
-    static getMyReportsFromFirebase(dispatch,uid){
+    static getMyReportsFromFirebase(dispatch, uid) {
         firebase.database().ref('/').child(`userReports/${uid}`)
-            .on("child_added",(snapshot)=>{
+            .on("child_added", (snapshot) => {
                 console.log(snapshot.val());
                 var data = snapshot.val();
-                data.key=snapshot.key;
+                data.key = snapshot.key;
                 dispatch(ReportActions.getMyReportsSuccessful(data));
                 // var Array = []
                 // for(var props in snapshot.val()){
@@ -124,29 +160,45 @@ export default class ReportMiddleware {
                 // console.log(Array);
             })
     }
-// Get My Reports Ends
+    // Get My Reports Ends
 
-// Get Report Detail Starts
-static getReportDetail(city,id){
-    console.log("city" , city + "id", id);
-    return(dispatch)=>{
-        dispatch(ReportActions.getReportDetail())
-        ReportMiddleware.getReportDetailFromFirebase(dispatch,city,id);
+    // Get Report Detail Starts
+    static getReportDetail(city, id) {
+        console.log("city", city + "id", id);
+        return (dispatch) => {
+            dispatch(ReportActions.getReportDetail())
+            ReportMiddleware.getReportDetailFromFirebase(dispatch, city, id);
+        }
     }
-}
-static getReportDetailFromFirebase(dispatch,city,id){
-    {
+    static getReportDetailFromFirebase(dispatch, city, id) {
+
         firebase.database().ref('/').child(`reports/${city}/${id}`)
-            .on("value",(snapshot)=>{
+            .on("value", (snapshot) => {
                 var data = snapshot.val();
+                data.key = snapshot.key;
                 console.log("data", data)
                 dispatch(ReportActions.getReportDetailSuccessful(data));
             })
-    }
-}
-// Get Report Detail Ends
 
-// get List Of Cities Starts
+    }
+    // Get Report Detail Ends
+    // Status Update  Starts
+    static statusUpdate(status, reportDetail) {
+        return (dispatch) => {
+            // dispatch(ReportActions.statusUpdate());
+            ReportMiddleware.statusUpdateOnFirebase(dispatch, status, reportDetail);
+        }
+    }
+    static statusUpdateOnFirebase(dispatch, status, reportDetail) {
+        firebase.database().ref('/').child(`reports/${reportDetail.city}/${reportDetail.key}/statusList`)
+            .push({ "statusMessage": status });
+        firebase.database().ref('/').child(`userReports/${reportDetail.userId}/${reportDetail.key}/statusList`)
+            .push({ "statusMessage": status });
+        dispatch(ReportActions.statusUpdateSuccessful());
+    }
+    // Status Update Ends
+
+    // get List Of Cities Starts
     static getListOfCities() {
         return (dispatch) => {
             dispatch(ReportActions.getListOfCities());

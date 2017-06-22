@@ -95,7 +95,7 @@ class SignUp extends Component{
   </div>
   <div className="button">
     <RaisedButton label="Sign Up" onClick={this.signup} primary={true}  color={styles.RaisedButton} /> <br/> <br/> <br/> 
-    <Link to="/login"><RaisedButton label="Login" primary={true}/> </Link>
+    {/*<Link to="/login"><RaisedButton label="Login" primary={true}/> </Link>*/}
   
   </div>
   </div>
