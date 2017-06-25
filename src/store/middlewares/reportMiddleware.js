@@ -25,7 +25,8 @@ export default class ReportMiddleware {
                     .then(() => {
                         // console.log("/////////////", report)
                         dispatch(ReportActions.fileReportSuccessful(reportFile));
-                        ReportMiddleware.updateCounts(dispatch, reportFile);
+                        // ReportMiddleware.updateCounts(dispatch, reportFile);
+                        ReportMiddleware.getReportCount(dispatch, reportFile);
                         // ReportMiddleware.updatingReportCounts(dispatch, reportFile, reportCounts);
                     })
                 console.log("report updated");
@@ -36,40 +37,46 @@ export default class ReportMiddleware {
     }
     //Reporting File Ends
 
-    // static updateCounts(dispatch, reportFile) {
-    //    var count = {
-    //         Crime:0,
-    //         Complaint:0,
-    //         MissingPerson:0
-    //     }
-    //     if(reportFile.reportType==="Crime"){
-    //        count.Crime = count.Crime + 1;
-    //     }
-    //     if(reportFile.reportType==="Complaint"){
-    //         count.Complaint = count.Complaint + 1;
-    //     }
-    //     if(reportFile.reportType==="Missing Person"){
-    //         count.MissingPerson = count.MissingPerson + 1;
-    //     }
-    //     firebase.database().ref('/').child(`reportCounts/${reportFile.city}`)
-    //         .set(count)
-    //         .then(()=>{console.log("count updated")})
-    // }
+    static updateCounts(dispatch, reportFile) {
+       var count = {
+            Crime:0,
+            Complaint:0,
+            MissingPerson:0
+        }
+        if(reportFile.reportType==="Crime"){
+           count.Crime = count.Crime + 1;
+        }
+        if(reportFile.reportType==="Complaint"){
+            count.Complaint = count.Complaint + 1;
+        }
+        if(reportFile.reportType==="Missing Person"){
+            count.MissingPerson = count.MissingPerson + 1;
+        }
+        firebase.database().ref('/').child(`reportCounts/${reportFile.city}`)
+            .set(count)
+            .then(()=>{console.log("count updated")})
+    }
 
-    // static getReportCount(){
-    //     return (dispatch) =>{
-    //         dispatch(ReportActions.getReportCount());
-    //         ReportMiddleware.getReportCountFromFirebase(dispatch);
-    //     }
-    // }
-    // static getReportCountFromFirebase(dispatch){
-    //     firebase.database().ref('/').child(`reportCounts`)
-    //     .on("value" , (snapshot)=>{
-    //         var counts = snapshot.val();
-    //         console.log("Report Count", counts);
-    //         dispatch(ReportActions.getReportCountSuccessful(counts));
-    //     });
-    // }
+    static getReportCount(dispatch,reportFile){
+        return (dispatch) =>{
+            dispatch(ReportActions.getReportCount());
+            ReportMiddleware.getReportCountFromFirebase(dispatch,reportFile);
+        }
+    }
+    static getReportCountFromFirebase(dispatch,reportFile){
+        firebase.database().ref('/').child(`reports/${reportFile}`)
+        // firebase.database().ref('/').child(`reportCounts`)
+        // .on("value" , (snapshot)=>{
+        //     var counts = snapshot.val();
+        //     console.log("Report Count", counts);
+            // var Array = [];
+            // for (var prop in counts){
+            //     Array.push(counts[prop])
+            // }
+            // console.log("88888888888888888888",Array)
+            // dispatch(ReportActions.getReportCountSuccessful(counts));
+        // });
+    }
 
 
     // Update Count Starts
@@ -117,6 +124,24 @@ export default class ReportMiddleware {
         reportCityCountRef.set(cityCount);
     }
     // Updating Count Ends
+    static AllreportCounts(){
+        return(dispatch) => {
+            firebase.database().ref('/').child(`reports`)
+            .on("value", (snapshot)=>{
+                var data = snapshot.val();
+                console.log(data);
+                var Array= [];
+                for (var prop in data){
+                    for (var b in data[prop]){
+                        Array.push(data[prop][b])
+                    }
+                } 
+                console.log(Array)
+                dispatch(ReportActions.AllreportCounts(Array));
+                // console.log(Object.keys(data).length);
+            })
+        }
+    }
 
     // Get Report List Starts
     static getReportList(cityName) {

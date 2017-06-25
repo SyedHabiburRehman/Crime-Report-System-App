@@ -23,8 +23,8 @@ const mapDispatchToProps = (dispatch) => {
     logout: () => {
       dispatch(FirebaseAuthService.logoutFromFirebase());
     },
-    getReportCount: () => {
-      dispatch(ReportMiddleware.getReportCount());
+    AllreportCounts: () => {
+      dispatch(ReportMiddleware.AllreportCounts());
     }
   }
 }
@@ -49,7 +49,7 @@ class App extends Component {
   }
   componentWillMount() {
     this.props.getListOfcities();
-    this.props.getReportCount();
+    this.props.AllreportCounts();
   }
   render() {
     const styles = {

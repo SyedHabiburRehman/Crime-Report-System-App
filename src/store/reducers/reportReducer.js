@@ -11,7 +11,8 @@ const INITIAL_STATE = {
     reportDetail: {},
     isMyReportType: false,
     myReportList: [],
-    isStatusUpdated: false
+    isStatusUpdated: false,
+    allReports : []
 
 
 }
@@ -82,6 +83,10 @@ export const ReportReducer = (state = INITIAL_STATE, action) => {
         case ReportActions.GET_REPORT_COUNT_REJECTED:
             return Object.assign({}, state, { isProcessing: false, isError: true, errorMessage: action.payload, reportCount: {} });
 
+        case ReportActions.GET_ALL_COUNT_SUCCESSFUL:
+            console.log("Sdsd")
+           console.log(Object.keys(action.payload).length);
+           return Object.assign({},state, {isError: false, allReports: action.payload })
         default:
             return state
     }

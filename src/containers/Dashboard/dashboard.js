@@ -6,13 +6,15 @@ import CrimeReport from '../../crimeReport/crimeReport';
 import * as MUI from 'material-ui';
 
 const mapStateToProps = (state) => {
-    console.log("state.ReportReducer.reportCount", state.ReportReducer.reportCount);
+    console.log("state.ReportReducer.reportCount", state.ReportReducer.allReport);
     return {
+        isLoggedin: state.AuthReducer.isLoggedin,
         uid: state.AuthReducer.authUser.uid,
         reportList: state.ReportReducer.reportList,
         cityList: state.ReportReducer.cityList,
         myReportList: state.ReportReducer.myReportList,
-        reportCount: state.ReportReducer.reportCount
+        reportCount: state.ReportReducer.reportCount,
+        allReports: state.ReportReducer.allReports
     }
 }
 
@@ -21,6 +23,7 @@ const mapDispatchToProps = (dispatch) => {
         getReportList: (cityName) => {
             dispatch(ReportMiddleware.getReportList(cityName));
         },
+        
         //     getMyReports: (uid)=> {dispatch(ReportMiddleware.getMyReports(uid))}
     }
 }
@@ -37,6 +40,7 @@ class Dashboard extends Component {
             city: value
         })
         this.props.getReportList(value);
+        
     }
     renderFilterCity() {
         var cityFilter = (
@@ -80,7 +84,7 @@ class Dashboard extends Component {
                 {this.props.location.pathname !== "/myReports" ? this.renderFilterCity() : null}
 
                 <CrimeReport {...this.props} city={this.state.city} />
-                {console.log(this.props.reportCount.Complaint)}
+                {/*{console.log(this.props.reportCount.Complaint)}*/}
 
             </div>
         )

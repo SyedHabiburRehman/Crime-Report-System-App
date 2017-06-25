@@ -13,7 +13,7 @@ export default class Routes extends Component {
         return (
             <Router history={browserHistory}>
                 <Route path="/" component={App}>
-                    <IndexRoute component={SignUp} />
+                    <IndexRoute component={Dashboard} />
 
                     <Route path="/signup" component={SignUp} />
                     <Route path="/login" component={Login} />
@@ -22,7 +22,6 @@ export default class Routes extends Component {
                     <Route path="/reportItem/:id" component={ReportDetail} />
                     <Route path="/myReports" component={Dashboard} />
                 </Route>
-
             </Router>
         )
     }

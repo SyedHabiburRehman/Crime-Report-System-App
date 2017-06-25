@@ -9,11 +9,24 @@ import RecordVoiceOver from 'material-ui/svg-icons/action/record-voice-over';
 
 
 class CrimeReport extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        // this.state = {
+        //     total:0,
+        //     crimes: 0,
+        //     complaints: 0,
+        //     missingPersons: 0
+        // }
         this.handleshowDetail = this.handleshowDetail.bind(this);
-        this.state={counts:this.props.reportCount}
+
     }
+    // componentWillMount() {
+    //     setTimeout(() => {
+    //         console.log(this.props.allReports);
+    //         this.cityRender(this.props.allReports, "cityRender");
+    //     }, 2000)
+
+    // }
 
     handleshowDetail = (city, key) => {
         console.log(city, key)
@@ -26,8 +39,6 @@ class CrimeReport extends Component {
                 <MUI.List>
                     {
                         filterList.map(report => {
-                            console.log("=================", report)
-                            console.log("=================", report.key)
                             return (
                                 <div key={report.key}>
                                     <MUI.ListItem
@@ -48,43 +59,92 @@ class CrimeReport extends Component {
         )
 
     }
+    cityRender(reportList) {
+        var total = 0;
+        var missingPersons = 0;
+        var crimes = 0;
+        var complaints = 0;
+        reportList.forEach((report) => {
+            if (report.reportType === "Complaint") {
+                // console.log(Object.keys(report.val()).length)
+                complaints = complaints + 1;
+
+            }
+            if (report.reportType === "Crime") {
+                // console.log(Object.keys(report.val()).length)
+                crimes = crimes + 1;
+
+            }
+            if (report.reportType === "Missing Person") {
+                // console.log(Object.keys(report.val()).length)
+                missingPersons = missingPersons + 1;
+
+            }
+        });
+
+        total = missingPersons + crimes + complaints;
+
+        return (
+            this.renders(total, missingPersons, crimes, complaints)
+        )
+    };
+    renders(total, missingPersons, crimes, complaints) {
+        return (
+            <div>
+                <div><p>Total: {total}</p></div>
+                <div><p>Crimes: {crimes}</p></div>
+                <div><p>Complaints: {complaints}</p></div>
+                <div><p>Missing Persons: {missingPersons}</p></div>
+            </div>
+        )
+
+    }
     // renderCount(city) {
-    //     // const {counts} = this.props;
-    //     // console.log(counts);
-    //     // console.log(this.props.reportCount.Crime)
-    //     var countArray = [this.props.reportCount[city]]
-    //     console.log(countArray)
-    //     return(
+    //     const { reportCount } = this.props;
+    //     const d = reportCount[city]
+    //     console.log(reportCount[city].Crime)
+    //     console.log(reportCount["Crime"])
+
+
+    //     var totalCounts = {
+    //         total: 0,
+    //         complaints: 0,
+    //         crimes: 0,
+    //         missingPersons: 0
+    //     }
+    //     if (reportCount && reportCount[city]) {
+    //         console.log(reportCount && reportCount[city])
+    //     }
+    //     else {
+    //         console.log("false")
+    //     }
+    //     totalCounts.crimes = reportCount && reportCount[city] ? reportCount[city].Crime : 0;
+    //     totalCounts.missingPersons = reportCount && reportCount[city] ? reportCount[city].MissingPerson : 0;
+    //     totalCounts.complaints = reportCount && reportCount[city] ? reportCount[city].Complaint : 0;
+    //     totalCounts.total = totalCounts.crimes
+    //         + totalCounts.missingPersons
+    //         + (this.props.isLoggedin ? totalCounts.complaints : 0)
+    //     console.log(totalCounts.complaints)
+    //     return (
+
     //         <div>
-    //             {
-    //                 //countArray.map(type=>{console.log(type)
-    //                 countArray.map((t,i)=>{console.log(t)
-    //                      return(
-    //                         <div key={i}>
-    //                             <p>{t}</p>
-    //                             {/*<p>{type.Complaint}</p>
-    //                             <p>{type.MissingPerson}</p>*/}
-    //                         </div>
-    //                     )
-                    
-                       
-    //                 })
-    //             }
-    //             <p>{this.props.reportCount.Crime}</p>
+    //             <p>{totalCounts.complaints}</p>
     //         </div>
     //     )
     // }
 
     render() {
 
-        console.log(this.props)
-        console.log(this.props.city)
-        console.log(this.props.location.pathname)
+        console.log(this.props, "----------------")
+        // console.log(this.props.city)
+        // console.log(this.props.location.pathname)
         const reportList = this.props.location.pathname === "/dashboard" ? this.props.reportList : this.props.myReportList;
         console.log(reportList)
         return (
             <div>
-                {this.renderCount(this.props.city)}
+                {this.props.city ? (alert(this.props.city), this.cityRender(this.props.reportList)) : this.cityRender(this.props.allReports)}
+                {/*{this.cityRender(this.props.reportList)}*/}
+                {/*{this.renderCount(this.props.city)}*/}
                 <MUI.Tabs>
                     <MUI.Tab icon={<Fingerprint />} label="Crime">
                         {

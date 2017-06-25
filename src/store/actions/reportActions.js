@@ -28,6 +28,15 @@ export default class ReportActions{
     static GET_REPORT_COUNT_SUCCESSFUL = "GET_REPORT_COUNT_SUCCESSFUL";
     static GET_REPORT_COUNT_REJECTED = "GET_REPORT_COUNT_REJECTED";
 
+    static GET_ALL_COUNT_SUCCESSFUL = "GET_ALL_COUNT_SUCCESSFUL";
+
+    static AllreportCounts(allCounts){
+        console.log(allCounts)
+        return{
+            type: ReportActions.GET_ALL_COUNT_SUCCESSFUL,
+            payload: allCounts
+        }
+    }
     static fileReport(){
         return{
             type:ReportActions.FILE_REPORT,
